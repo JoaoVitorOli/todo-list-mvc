@@ -57,8 +57,7 @@ export default function TodoListView()  {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Padrão MVC</Text>
-      <Text style={styles.title}>Lista de Tarefas</Text>
+      <Text style={styles.title}>Lista de Tarefas (MVC)</Text>
 
       <View style={styles.inputContainer}>
         <TextInput
