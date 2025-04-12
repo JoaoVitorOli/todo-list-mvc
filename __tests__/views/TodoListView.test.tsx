@@ -11,7 +11,7 @@ jest.mock('react-native/Libraries/Alert/Alert', () => {
 describe('TodoListView', () => {
   it('deve renderizar o título da tela', () => {
     const { getByText } = render(<TodoListView />);
-    expect(getByText('Lista de Tarefas')).toBeTruthy();
+    expect(getByText('Lista de Tarefas (MVC)')).toBeTruthy();
   });
 
   it('deve adicionar uma nova tarefa quando o botão for pressionado', async () => {
