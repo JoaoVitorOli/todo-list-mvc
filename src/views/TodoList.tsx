@@ -8,14 +8,14 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { TodoController } from '../controllers/TodoController';
-import { Todo } from '../models/Todo';
+import {TodoController} from '../controllers/TodoController';
+import {Todo, useTodoStore} from '../models/Todo';
 import TodoItem from './TodoItem';
 
 const todoController = new TodoController()
 
 export default function TodoListView()  {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const todos = useTodoStore(state => state.todos);
   const [newTodoTitle, setNewTodoTitle] = useState('');
 
   const handleAddTodo = () => {
@@ -24,14 +24,18 @@ export default function TodoListView()  {
       return;
     }
 
-    const newTodo = todoController.addTodo(newTodoTitle.trim());
-    setTodos([...todos, newTodo]);
-    setNewTodoTitle('');
+    try {
+      todoController.addTodo(newTodoTitle);
+      setNewTodoTitle('');
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert('Erro', error.message);
+      }
+    }
   };
 
   const handleToggleTodoCompletion = (id: string) => {
-    const updatedTodos = todoController.toggleTodo(id, todos);
-    setTodos(updatedTodos);
+    todoController.toggleTodo(id);
   };
 
   const handleDeleteTodo = (id: string) => {
@@ -43,8 +47,7 @@ export default function TodoListView()  {
         {
           text: 'Excluir',
           onPress: () => {
-            const updatedTodos = todoController.removeTodo(id, todos);
-            setTodos(updatedTodos);
+            todoController.removeTodo(id);
           },
           style: 'destructive',
         },

@@ -1,24 +1,23 @@
-import { Todo } from "../models/Todo";
+import { useTodoStore, Todo } from '../models/Todo';
 
 export class TodoController {
-  addTodo(title: string): Todo {
-    return {
-      id: Date.now().toString(),
-      title,
-      completed: false,
-    };
+  getAllTodos(): Todo[] {
+    return useTodoStore.getState().todos;
   }
 
-  toggleTodo(id: string, todos: Todo[]): Todo[] {
-    return todos.map(todo => {
-      if (todo.id === id) {
-        return { ...todo, completed: !todo.completed };
-      }
-      return todo;
-    });
+  addTodo(title: string): void {
+    if (!title || title.trim() === '') {
+      throw new Error('O título não pode estar vazio');
+    }
+    useTodoStore.getState().addTodo(title.trim());
   }
 
-  removeTodo(id: string, todos: Todo[]): Todo[] {
-    return todos.filter(todo => todo.id !== id);
+  toggleTodo(id: string): void {
+    useTodoStore.getState().toggleTodo(id);
+  }
+
+  removeTodo(id: string): void {
+    useTodoStore.getState().removeTodo(id);
   }
 }
+

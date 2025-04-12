@@ -8,6 +8,7 @@ describe('TodoItem', () => {
     id: '1',
     title: 'Testar componente',
     completed: false,
+    createdAt: new Date(),
   };
 
   const onToggleCompletion = jest.fn();

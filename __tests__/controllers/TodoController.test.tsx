@@ -1,39 +1,30 @@
 import { TodoController } from '../../src/controllers/TodoController';
-import { Todo } from '../../src/models/Todo';
+import { useTodoStore } from '../../src/models/Todo';
 
 describe('TodoController', () => {
-  let controller: TodoController;
-  let mockTodos: Todo[];
+  const controller = new TodoController();
 
   beforeEach(() => {
-    controller = new TodoController();
-    mockTodos = [
-      { id: '1', title: 'Tarefa 1', completed: false },
-      { id: '2', title: 'Tarefa 2', completed: true },
-    ];
+    useTodoStore.setState({ todos: [] });
   });
 
-  it('deve adicionar uma nova tarefa', () => {
-    const todo = controller.addTodo('Nova Tarefa');
-    expect(todo).toHaveProperty('id');
-    expect(todo.title).toBe('Nova Tarefa');
-    expect(todo.completed).toBe(false);
+  it('adiciona uma tarefa via controller', () => {
+    controller.addTodo('Do Controller');
+    const todos = controller.getAllTodos();
+
+    expect(todos.length).toBe(1);
+    expect(todos[0].title).toBe('Do Controller');
   });
 
-  it('deve alternar o status de uma tarefa', () => {
-    const updated = controller.toggleTodo('1', mockTodos);
-    const toggled = updated.find(t => t.id === '1');
-    expect(toggled?.completed).toBe(true);
+  it('não permite adicionar título vazio', () => {
+    expect(() => controller.addTodo('')).toThrow('O título não pode estar vazio');
   });
 
-  it('deve remover uma tarefa', () => {
-    const updated = controller.removeTodo('2', mockTodos);
-    expect(updated.find(t => t.id === '2')).toBeUndefined();
-    expect(updated.length).toBe(1);
-  });
+  it('remove tarefa via controller', () => {
+    controller.addTodo('Test');
+    const id = controller.getAllTodos()[0].id;
 
-  it('não deve alterar a lista se o id não for encontrado ao remover', () => {
-    const updated = controller.removeTodo('999', mockTodos);
-    expect(updated.length).toBe(2);
+    controller.removeTodo(id);
+    expect(controller.getAllTodos().length).toBe(0);
   });
 });
